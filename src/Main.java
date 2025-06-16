@@ -26,7 +26,14 @@ public class Main {
             System.out.println("6 Convertir 🇺🇸 USD a 🇧🇷 BRL");
             System.out.println("7 🚪 Salir");
             System.out.print("👉 Opción: ");
-            int opcion = scanner.nextInt();
+
+            int opcion;
+            try {
+                opcion = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("❗ Entrada no válida. Por favor ingrese un número del 1 al 7.");
+                continue;
+            }
 
             if (opcion == 7) {
                 System.out.println("👋 ¡Hasta luego!");
@@ -47,8 +54,20 @@ public class Main {
                 }
             }
 
-            System.out.print("Ingrese la cantidad: ");
-            double cantidad = scanner.nextDouble();
+            double cantidad;
+            while (true) {
+                System.out.print("Ingrese la cantidad: ");
+                try {
+                    cantidad = Double.parseDouble(scanner.nextLine());
+                    if (cantidad < 0) {
+                        System.out.println("❗ La cantidad no puede ser negativa.");
+                        continue;
+                    }
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("❗ Entrada no válida. Debe ingresar un número válido.");
+                }
+            }
 
             try {
                 double resultado = converter.convert(from, to, cantidad);
@@ -73,7 +92,6 @@ public class Main {
             String json = gson.toJson(ratesObj);
             Type type = new TypeToken<Map<String, Double>>() {}.getType();
             Map<String, Double> ratesMap = gson.fromJson(json, type);
-
 
             return new CurrencyConverter(ratesMap);
         } catch (Exception e) {
